@@ -8,6 +8,5 @@ export class CreateAccountInput extends PickType(User, [
   'password',
   'role',
 ]) {}
-
 @ObjectType()
 export class CreateAccountOutput extends MutationOutput {}
