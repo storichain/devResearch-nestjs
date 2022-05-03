@@ -2,36 +2,49 @@ import got from 'got';
 import * as FormData from 'form-data';
 import { Inject, Injectable } from '@nestjs/common';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
-import { MailModuleOptions } from './mail.interfaces';
+import { EmailVar, MailModuleOptions } from './mail.interfaces';
 
 @Injectable()
 export class MailService {
   constructor(
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
-  ) {
-    //this.sendEmail('testing', 'test');
-  }
+  ) {}
 
-  private async sendEmail(subject: string, template: string) {
+  private async sendEmail(
+    subject: string,
+    template: string,
+    emailVars: EmailVar[],
+  ) {
     const form = new FormData();
-    form.append('from', `Excited User <mailgun@${this.options.domain}>`);
-    form.append('to', `dnsdyd200@gmail.com`);
+    form.append('from', `KWY Nuber Eats <mailgun@${this.options.domain}>`);
+    form.append('to', `dnsdyd200@naver.com`);
     form.append('subject', subject);
     form.append('template', template);
-    form.append('v:code', '123123');
-    form.append('v:username', 'kwy!!');
-    const response = await got(
-      `https://api.mailgun.net/v3/${this.options.domain}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            `api:${this.options.apiKey}`,
-          ).toString('base64')}`,
+    emailVars.forEach((eVar) => form.append(`v:${eVar.key}`, eVar.value));
+    console.log(form);
+    try {
+      await got.post(
+        `https://api.mailgun.net/v3/${this.options.domain}/messages`,
+        {
+          headers: {
+            Authorization: `Basic ${Buffer.from(
+              `api:${this.options.apiKey}`,
+            ).toString('base64')}`,
+          },
+          body: form,
         },
-        body: form,
-      },
-    );
-    console.log(response.body);
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  sendVerificationEmail(email: string, code: string) {
+    this.sendEmail('Verify Your Email', 'nubereats', [
+      { key: 'code', value: code },
+      { key: 'username', value: email },
+    ]);
   }
 }
