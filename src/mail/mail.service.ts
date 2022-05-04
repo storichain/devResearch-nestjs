@@ -10,11 +10,11 @@ export class MailService {
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {}
 
-  private async sendEmail(
+  async sendEmail(
     subject: string,
     template: string,
     emailVars: EmailVar[],
-  ) {
+  ): Promise<boolean> {
     const form = new FormData();
     form.append('from', `KWY Nuber Eats <mailgun@${this.options.domain}>`);
     form.append('to', `dnsdyd200@naver.com`);
@@ -36,7 +36,6 @@ export class MailService {
       );
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   }
