@@ -9,7 +9,7 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Restaurant } from '../entities/restaurant.entity';
 
 @InputType()
-export class CreateRestaurantInputType extends PickType(Restaurant, [
+export class CreateRestaurantInput extends PickType(Restaurant, [
   'name',
   'coverImg',
   'address',
