@@ -66,11 +66,17 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
+  enum UserRole {
+    Client = 'Client',
+    Owner = 'Owner',
+    Delivery = 'Delivery',
+  }
+
   describe('createAccount', () => {
     const createAccountArgs = {
       email: 'bs@email.com',
       password: 'bs.password',
-      role: 0,
+      role: UserRole.Client,
     };
     it('should fail if user exists', async () => {
       usersRepository.findOne.mockResolvedValue({
