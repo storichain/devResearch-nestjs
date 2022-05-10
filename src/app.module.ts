@@ -64,13 +64,21 @@ import { OrderItem } from './orders/entities/order-item.entity';
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      installSubscriptionHandlers: true,
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req }) => {
-        //console.log(req);
-        return { user: req['user'] };
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            const authToken = connectionParams['x-jwt'];
+            if (!authToken) {
+              throw new Error('Token is not valid');
+            }
+            const token = authToken;
+            return { token };
+          },
+        },
       },
+      context: ({ req }) => ({ token: req.headers['x-jwt'] }),
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
@@ -84,15 +92,9 @@ import { OrderItem } from './orders/entities/order-item.entity';
     UsersModule,
     RestaurantsModule,
     OrdersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.ALL,
-    });
-  }
-}
+export class AppModule {}
