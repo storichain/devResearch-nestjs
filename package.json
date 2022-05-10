@@ -38,6 +38,7 @@
     "form-data": "^3.0.0",
     "got": "^11.8.3",
     "graphql": "^16.4.0",
+    "graphql-subscriptions": "^2.0.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
@@ -72,7 +73,7 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^src/(.*)$":"<rootDir>/$1"
+      "^src/(.*)$": "<rootDir>/$1"
     },
     "moduleFileExtensions": [
       "js",
