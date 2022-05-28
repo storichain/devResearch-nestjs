@@ -5,6 +5,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import S3 from 'aws-sdk';
 
 @Controller('uploads')
 export class UploadsController {
